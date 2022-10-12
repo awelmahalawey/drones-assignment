@@ -69,6 +69,32 @@ components:
         - code
         - weight
 
+    DroneDataTransferResource:
+      type: object
+      properties:
+        serialNumber:
+          type: string
+          description: Drone Serial Number
+        model:
+          type: string
+          $ref: '#/components/schemas/DroneModelEnum'
+        state:
+          type: string
+          $ref: '#/components/schemas/DroneStateEnum'
+        weightLimit:
+          type: integer
+          description: Drone weight Limit weight
+        batteryCap:
+          type: number
+          format: double
+          description: Drone battery capacity
+      required:
+        - serialNumber
+        - model
+        - state
+        - weightLimit
+        - batteryCap
+
     DronePayloadDataTransferResource:
       type: object
       properties:
@@ -126,3 +152,21 @@ components:
       type: string
       enum:
         - MEDICATION
+
+    DroneStateEnum:
+      type: string
+      enum:
+        - IDLE
+        - LOADING
+        - LOADED
+        - DELIVERING
+        - DELIVERED
+        - RETURNING
+
+    DroneModelEnum:
+      type: string
+      enum:
+        - LIGHT_WEIGHT
+        - MIDDLE_WEIGHT
+        - CRUISER_WEIGHT
+        - HEAVY_WEIGHT
