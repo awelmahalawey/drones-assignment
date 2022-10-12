@@ -1,0 +1,73 @@
+openapi: 3.0.1
+
+info:
+  title: Drones Backend API
+  description: Drones Backend API
+  contact:
+    name: Drones Backend Team
+    email: ahmed.elmahalawey@gmail.com
+  version: 4.1.0
+
+servers:
+  - url: http://localhost:8080/api/v1
+    description: Local server
+
+paths:
+  /mock/test:
+    get:
+      tags:
+        - Mock Test Functionality
+      summary: Mock Test Functionality. (To Be Removed)
+      description: Mock Test Functionality. (To Be Removed)
+      operationId: mockTestApi
+      responses:
+        200:
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BaseInfoResource'
+        400:
+          description: Request error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiErrorResource'
+        500:
+          description: Unexpected internal error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiErrorResource'
+        401:
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiErrorResource'
+
+components:
+  schemas:
+    BaseInfoResource:
+      type: object
+      properties:
+        message:
+          type: string
+          description: A brief description of the response
+
+    ApiErrorResource:
+      type: object
+      properties:
+        timestamp:
+          type: integer
+          format: int64
+          description: timestamp of the error
+        errorName:
+          type: string
+          description: Error name
+        errorMessage:
+          type: string
+          description: Detailed error message
+        errorCode:
+          type: string
+          description: Error Code, if any
