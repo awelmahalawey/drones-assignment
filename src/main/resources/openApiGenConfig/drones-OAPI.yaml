@@ -69,6 +69,26 @@ components:
         - code
         - weight
 
+    DronePayloadDataTransferResource:
+      type: object
+      properties:
+        payloadType:
+          type: string
+          $ref: '#/components/schemas/PayloadTypeEnum'
+        payloadIdentifier:
+          type: string
+          description: Payload identifier
+        state:
+          type: string
+          $ref: '#/components/schemas/PayloadStateEnum'
+        droneId:
+          type: string
+          description: Drone identifier that is holding the payload
+      required:
+        - payloadType
+        - payloadIdentifier
+        - state
+
     BaseInfoResource:
       type: object
       properties:
@@ -92,3 +112,17 @@ components:
         errorCode:
           type: string
           description: Error Code, if any
+
+
+    # Enums
+    PayloadStateEnum:
+      type: string
+      enum:
+        - READY_FOR_DELIVERY
+        - IN_DELIVERY
+        - DELIVERED
+
+    PayloadTypeEnum:
+      type: string
+      enum:
+        - MEDICATION

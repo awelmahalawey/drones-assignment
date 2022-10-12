@@ -1,6 +1,5 @@
 package com.musala.soft.drones.entity;
 
-import com.musala.soft.drones.enumerator.DroneModel;
 import com.musala.soft.drones.enumerator.PayloadState;
 import com.musala.soft.drones.enumerator.PayloadType;
 import lombok.Getter;
@@ -22,7 +21,7 @@ public class DronePayload extends BaseEntityUUID {
 
     @Column(name = "payload_type", length = 255, nullable = false)
     @Enumerated(EnumType.STRING)
-    private PayloadType payloadType;
+    private PayloadType type;
 
     @Column(name = "payload_identifier", length = 255, nullable = false)
     private String payloadIdentifier;

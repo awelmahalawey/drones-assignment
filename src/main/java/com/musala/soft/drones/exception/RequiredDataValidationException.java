@@ -14,4 +14,8 @@ public class RequiredDataValidationException extends BaseRunTimeException {
         this.setMessage(Arrays.toString(errorsList.toArray()));
         this.violationErrorMessages = new ArrayList<>(errorsList);
     }
+
+    public RequiredDataValidationException(String errorName) {
+        super(errorName);
+    }
 }
