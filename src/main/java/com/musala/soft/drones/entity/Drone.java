@@ -7,6 +7,7 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import javax.persistence.*;
+import java.util.List;
 
 @Entity
 @Getter
@@ -31,4 +32,7 @@ public class Drone extends BaseEntityUUID {
 
     @Column(name = "battery_cap", nullable = false)
     private Double batteryCap;
+
+    @OneToMany(mappedBy = "drone", fetch = FetchType.LAZY)
+    private List<DronePayload> dronePayloads;
 }
