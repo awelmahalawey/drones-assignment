@@ -46,6 +46,205 @@ paths:
               schema:
                 $ref: '#/components/schemas/ApiErrorResource'
 
+  /medication:
+    get:
+      tags:
+        - Medication Functionality
+      summary: Fetch Medications Functionality.
+      description: Api to fetch all medications with optional filters.
+      operationId: fetchAllMedications
+      parameters:
+        - $ref: '#/components/parameters/PageNumberParam'
+        - $ref: '#/components/parameters/PageSizeParam'
+        - $ref: '#/components/parameters/searchTextParam'
+      responses:
+        200:
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/MedicationResource'
+        400:
+          description: Request error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiErrorResource'
+        500:
+          description: Unexpected internal error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiErrorResource'
+        401:
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiErrorResource'
+    post:
+      tags:
+        - Medication Functionality
+      summary: Create new Medication Functionality.
+      description: Api to create new medication.
+      operationId: addMedication
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/MedicationDataTransferResource'
+      responses:
+        200:
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MedicationResource'
+        400:
+          description: Request error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiErrorResource'
+        500:
+          description: Unexpected internal error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiErrorResource'
+        401:
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiErrorResource'
+
+  /medication/{medicationId}:
+    get:
+      tags:
+        - Medication Functionality
+      summary: Fetch Medication details by Id Functionality.
+      description: Api to fetch medication details by Id.
+      operationId: getMedicationDetails
+      parameters:
+        - name: medicationId
+          in: path
+          description: Medication Id
+          required: true
+          allowEmptyValue: false
+          schema:
+            type: string
+      responses:
+        200:
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MedicationResource'
+        400:
+          description: Request error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiErrorResource'
+        500:
+          description: Unexpected internal error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiErrorResource'
+        401:
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiErrorResource'
+    put:
+      tags:
+        - Medication Functionality
+      summary: Update existing Medication Functionality.
+      description: Api to update existing medication.
+      operationId: updateMedication
+      parameters:
+        - name: medicationId
+          in: path
+          description: Medication Id
+          required: true
+          allowEmptyValue: false
+          schema:
+            type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/MedicationDataTransferResource'
+      responses:
+        200:
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MedicationResource'
+        400:
+          description: Request error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiErrorResource'
+        500:
+          description: Unexpected internal error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiErrorResource'
+        401:
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiErrorResource'
+    delete:
+      tags:
+        - Medication Functionality
+      summary: Delete existing Medication Functionality.
+      description: Api to delete existing medication.
+      operationId: deleteMedication
+      parameters:
+        - name: medicationId
+          in: path
+          description: Medication Id
+          required: true
+          allowEmptyValue: false
+          schema:
+            type: string
+      responses:
+        200:
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BaseInfoResource'
+        400:
+          description: Request error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiErrorResource'
+        500:
+          description: Unexpected internal error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiErrorResource'
+        401:
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiErrorResource'
+
 components:
   schemas:
     MedicationDataTransferResource:
@@ -68,6 +267,26 @@ components:
         - name
         - code
         - weight
+
+    MedicationResource:
+      type: object
+      properties:
+        id:
+          type: string
+          description: Medication Id
+        name:
+          type: string
+          description: Medication name
+        code:
+          type: string
+          description: Medication code
+        weight:
+          type: number
+          format: double
+          description: Medication weight
+        imageUrl:
+          type: string
+          description: Medication Image URL
 
     DroneDataTransferResource:
       type: object
@@ -170,3 +389,37 @@ components:
         - MIDDLE_WEIGHT
         - CRUISER_WEIGHT
         - HEAVY_WEIGHT
+
+  parameters:
+    PageNumberParam:
+      name: page
+      in: query
+      description: The page to return.
+      schema:
+        type: integer
+    PageSizeParam:
+      name: size
+      in: query
+      description: The size of the page.
+      schema:
+        type: integer
+    searchTextParam:
+      name: searchText
+      in: query
+      description: search text to filter institutes
+      required: false
+      allowEmptyValue: true
+      schema:
+        type: string
+    AcceptLanguageParam:
+      name: accept-language
+      in: header
+      description: Accept language value
+      examples:
+        English:
+          value: "en"
+        Arabic:
+          value: "ar"
+      schema:
+        type: string
+        default: "en"
