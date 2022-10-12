@@ -10,3 +10,6 @@ CREATE TABLE IF NOT EXISTS medication (
    image_url VARCHAR(255),
    CONSTRAINT pk_medication PRIMARY KEY (id)
 );
+
+ALTER TABLE medication DROP CONSTRAINT IF EXISTS uc_bb22c232fb6ef75795303deb2;
+ALTER TABLE medication ADD CONSTRAINT uc_bb22c232fb6ef75795303deb2 UNIQUE (name, code);

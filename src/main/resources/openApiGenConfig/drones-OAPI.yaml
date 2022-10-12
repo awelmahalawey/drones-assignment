@@ -48,6 +48,27 @@ paths:
 
 components:
   schemas:
+    MedicationDataTransferResource:
+      type: object
+      properties:
+        name:
+          type: string
+          description: Medication name
+        code:
+          type: string
+          description: Medication code
+        weight:
+          type: number
+          format: double
+          description: Medication weight
+        imageUrl:
+          type: string
+          description: Medication Image URL
+      required:
+        - name
+        - code
+        - weight
+
     BaseInfoResource:
       type: object
       properties:
