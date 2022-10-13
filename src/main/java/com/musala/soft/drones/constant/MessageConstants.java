@@ -1,6 +1,7 @@
 package com.musala.soft.drones.constant;
 
 public class MessageConstants {
+    public static final String INTERNAL_SERVER_ERROR = "internalServerError";
     public static final String MISSING_REQUIRED_DATA = "missingRequiredData";
 
     public static final String MEDICATION_ALREADY_EXIST = "medicationAlreadyExists";

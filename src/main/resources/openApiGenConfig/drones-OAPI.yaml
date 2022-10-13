@@ -637,9 +637,6 @@ components:
         errorMessage:
           type: string
           description: Detailed error message
-        errorCode:
-          type: string
-          description: Error Code, if any
 
 
     # Enums
