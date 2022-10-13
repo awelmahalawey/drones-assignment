@@ -73,7 +73,7 @@ public class MedicationDataManagementService {
     public Medication getMedication(String medicationId)
             throws DataValidationException, MedicationDataManagementException {
 
-        if (StringUtils.hasLength(medicationId)) {
+        if (!StringUtils.hasLength(medicationId)) {
             throw new DataValidationException(MessageConstants.INVALID_MEDICATION_ID);
         }
 
