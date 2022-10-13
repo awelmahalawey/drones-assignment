@@ -72,7 +72,7 @@ public class DroneDataManagementService {
     public Drone getDrone(String droneId)
             throws DataValidationException, DroneDataManagementException {
 
-        if (StringUtils.hasLength(droneId)) {
+        if (!StringUtils.hasLength(droneId)) {
             throw new DataValidationException(MessageConstants.INVALID_DRONE_ID);
         }
 

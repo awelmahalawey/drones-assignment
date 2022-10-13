@@ -245,6 +245,219 @@ paths:
               schema:
                 $ref: '#/components/schemas/ApiErrorResource'
 
+  /drone:
+    get:
+      tags:
+        - Drone Functionality
+      summary: Fetch Drones Functionality.
+      description: Api to fetch all drones with optional filters.
+      operationId: fetchAllDrones
+      parameters:
+        - $ref: '#/components/parameters/searchTextParam'
+        - name: state
+          in: query
+          description: Drone state filter
+          required: false
+          allowEmptyValue: true
+          schema:
+            type: string
+            $ref: '#/components/schemas/DroneStateEnum'
+        - name: model
+          in: query
+          description: Drone Model
+          required: false
+          allowEmptyValue: true
+          schema:
+            type: string
+            $ref: '#/components/schemas/DroneModelEnum'
+      responses:
+        200:
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/DroneResource'
+        400:
+          description: Request error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiErrorResource'
+        500:
+          description: Unexpected internal error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiErrorResource'
+        401:
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiErrorResource'
+    post:
+      tags:
+        - Drone Functionality
+      summary: Create new Drone Functionality.
+      description: Api to create new drone.
+      operationId: addDrone
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/DroneDataTransferResource'
+      responses:
+        200:
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/DroneResource'
+        400:
+          description: Request error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiErrorResource'
+        500:
+          description: Unexpected internal error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiErrorResource'
+        401:
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiErrorResource'
+
+  /drone/{droneId}:
+    get:
+      tags:
+        - Drone Functionality
+      summary: Fetch Drone details by Id Functionality.
+      description: Api to fetch drone details by Id.
+      operationId: getDroneDetails
+      parameters:
+        - name: droneId
+          in: path
+          description: Drone Id
+          required: true
+          allowEmptyValue: false
+          schema:
+            type: string
+      responses:
+        200:
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/DroneDetailedResource'
+        400:
+          description: Request error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiErrorResource'
+        500:
+          description: Unexpected internal error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiErrorResource'
+        401:
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiErrorResource'
+    put:
+      tags:
+        - Drone Functionality
+      summary: Update existing Drone Functionality.
+      description: Api to update existing drone.
+      operationId: updateDrone
+      parameters:
+        - name: droneId
+          in: path
+          description: Drone Id
+          required: true
+          allowEmptyValue: false
+          schema:
+            type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/DroneDataTransferResource'
+      responses:
+        200:
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/DroneResource'
+        400:
+          description: Request error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiErrorResource'
+        500:
+          description: Unexpected internal error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiErrorResource'
+        401:
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiErrorResource'
+    delete:
+      tags:
+        - Drone Functionality
+      summary: Delete existing Drone Functionality.
+      description: Api to delete existing drone.
+      operationId: deleteDrone
+      parameters:
+        - name: droneId
+          in: path
+          description: Drone Id
+          required: true
+          allowEmptyValue: false
+          schema:
+            type: string
+      responses:
+        200:
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BaseInfoResource'
+        400:
+          description: Request error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiErrorResource'
+        500:
+          description: Unexpected internal error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiErrorResource'
+        401:
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiErrorResource'
+
 components:
   schemas:
     MedicationDataTransferResource:
@@ -269,24 +482,26 @@ components:
         - weight
 
     MedicationResource:
-      type: object
-      properties:
-        id:
-          type: string
-          description: Medication Id
-        name:
-          type: string
-          description: Medication name
-        code:
-          type: string
-          description: Medication code
-        weight:
-          type: number
-          format: double
-          description: Medication weight
-        imageUrl:
-          type: string
-          description: Medication Image URL
+      allOf:
+        - $ref: '#/components/schemas/BasePayloadResource'
+        - type: object
+          properties:
+            id:
+              type: string
+              description: Medication Id
+            name:
+              type: string
+              description: Medication name
+            code:
+              type: string
+              description: Medication code
+            weight:
+              type: number
+              format: double
+              description: Medication weight
+            imageUrl:
+              type: string
+              description: Medication Image URL
 
     DroneDataTransferResource:
       type: object
@@ -314,6 +529,44 @@ components:
         - weightLimit
         - batteryCap
 
+    DroneResource:
+      type: object
+      properties:
+        id:
+          type: string
+          description: Drone ID
+        serialNumber:
+          type: string
+          description: Drone Serial Number
+        model:
+          type: string
+          $ref: '#/components/schemas/DroneModelEnum'
+        state:
+          type: string
+          $ref: '#/components/schemas/DroneStateEnum'
+        weightLimit:
+          type: integer
+          description: Drone weight Limit weight
+        batteryCap:
+          type: number
+          format: double
+          description: Drone battery capacity
+        payload:
+          type: object
+          $ref: '#/components/schemas/DronePayloadResource'
+          description: Drone current payload
+
+    DroneDetailedResource:
+      allOf:
+        - $ref: '#/components/schemas/DroneResource'
+        - type: object
+          properties:
+            previousPayloads:
+              type: array
+              items:
+                $ref: '#/components/schemas/DronePayloadResource'
+              description: Drone previus payloads
+
     DronePayloadDataTransferResource:
       type: object
       properties:
@@ -329,6 +582,36 @@ components:
         droneId:
           type: string
           description: Drone identifier that is holding the payload
+      required:
+        - payloadType
+        - payloadIdentifier
+        - state
+
+    BasePayloadResource:
+      type: object
+      discriminator:
+        propertyName: basePayloadResourceType
+      properties:
+        id:
+          type: string
+          description: Base payload details resource.
+
+    DronePayloadResource:
+      type: object
+      properties:
+        payloadType:
+          type: string
+          $ref: '#/components/schemas/PayloadTypeEnum'
+        payloadIdentifier:
+          type: string
+          description: Payload identifier
+        payloadDetails:
+          type: object
+          $ref: '#/components/schemas/BasePayloadResource'
+          description: Payload details
+        state:
+          type: string
+          $ref: '#/components/schemas/PayloadStateEnum'
       required:
         - payloadType
         - payloadIdentifier
