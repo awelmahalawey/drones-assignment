@@ -1,7 +1,6 @@
 package com.musala.soft.drones.task.scheduledTask;
 
-import com.musala.soft.drones.task.scheduledTaskService.DroneBatteryCapManagementTaskService;
-import com.musala.soft.drones.task.scheduledTaskService.DroneRoundTripManagementTaskService;
+import com.musala.soft.drones.task.scheduledTaskService.DroneShipmentInitializationTaskService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -12,23 +11,23 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.Date;
 
 @Service
-public class DroneBatteryCapManagementTask {
+public class DroneShipmentInitializationTask {
 
-    private final Logger logger = LoggerFactory.getLogger(DroneBatteryCapManagementTask.class);
+    private final Logger logger = LoggerFactory.getLogger(DroneShipmentInitializationTask.class);
 
     @Autowired
-    private DroneBatteryCapManagementTaskService droneBatteryCapManagementTaskService;
+    private DroneShipmentInitializationTaskService droneShipmentInitializationTaskService;
 
     @Transactional
     @Scheduled(cron = "* * * * * *")
     public void droneRoundTripManagementTask() {
         System.out.println(new Date());
-        logger.info("******************* Drone Battery Cap Management Cron Job *******************");
+        logger.info("******************* Drone Shipment Initialization Cron Job *******************");
         logger.info("****************************** Start ******************************");
 
-        droneBatteryCapManagementTaskService.chargeIdleDrones();
+        droneShipmentInitializationTaskService.initializeReadyShipmentDrones();
 
-        logger.info("******************* Drone Battery Cap Management Cron Job *******************");
+        logger.info("******************* Drone Shipment Initialization Cron Job *******************");
         logger.info("******************************* End *******************************");
     }
 }
