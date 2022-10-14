@@ -21,13 +21,6 @@ public class DroneShipmentInitializationTask {
     @Transactional
     @Scheduled(cron = "* * * * * *")
     public void droneRoundTripManagementTask() {
-        System.out.println(new Date());
-        logger.info("******************* Drone Shipment Initialization Cron Job *******************");
-        logger.info("****************************** Start ******************************");
-
         droneShipmentInitializationTaskService.initializeReadyShipmentDrones();
-
-        logger.info("******************* Drone Shipment Initialization Cron Job *******************");
-        logger.info("******************************* End *******************************");
     }
 }

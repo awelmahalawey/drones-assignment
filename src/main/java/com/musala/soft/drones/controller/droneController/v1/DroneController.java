@@ -21,6 +21,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.StringUtils;
 
+import java.util.Date;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -164,6 +165,7 @@ public class DroneController extends BaseController {
 
             DroneDataTransferResource droneDataTransferResource = droneDataMapper.mapDroneDataTransferResource(drone);
             droneDataTransferResource.setState(DroneStateEnum.LOADED);
+            droneDataTransferResource.setLastShipmentStartedAt(new Date().getTime());
             drone = droneDataManagementService.updateDrone(drone, droneDataTransferResource);
 
             DroneShipmentResource droneShipmentResource = new DroneShipmentResource();

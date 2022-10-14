@@ -22,13 +22,6 @@ public class DroneBatteryCapManagementTask {
     @Transactional
     @Scheduled(cron = "* * * * * *")
     public void droneRoundTripManagementTask() {
-        System.out.println(new Date());
-        logger.info("******************* Drone Battery Cap Management Cron Job *******************");
-        logger.info("****************************** Start ******************************");
-
         droneBatteryCapManagementTaskService.chargeIdleDrones();
-
-        logger.info("******************* Drone Battery Cap Management Cron Job *******************");
-        logger.info("******************************* End *******************************");
     }
 }

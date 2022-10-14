@@ -561,6 +561,10 @@ components:
           type: number
           format: double
           description: Drone battery capacity
+        lastShipmentStartedAt:
+          type: integer
+          format: int64
+          description: Drone last shipment starting time
       required:
         - serialNumber
         - model

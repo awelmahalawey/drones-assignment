@@ -147,6 +147,7 @@ public class DroneDataManagementService {
         drone.setModel(DroneModel.valueOf(droneDataTransferResource.getModel().getValue()));
         drone.setWeightLimit(droneDataTransferResource.getWeightLimit());
         drone.setBatteryCap(droneDataTransferResource.getBatteryCap());
+        drone.setLastShipmentStartedAt(droneDataTransferResource.getLastShipmentStartedAt());
         drone.setIsActive(true);
         return droneRepository.save(drone);
     }

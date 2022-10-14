@@ -21,14 +21,7 @@ public class DroneRoundTripManagementTask {
     @Transactional
     @Scheduled(cron = "0 * * * * *")
     public void droneRoundTripManagementTask() {
-        System.out.println(new Date());
-        logger.info("******************* Drone Round Trip Management Cron Job *******************");
-        logger.info("****************************** Start ******************************");
-
         droneRoundTripManagementTaskService.updateDeliveringDronesStatesUponReturn();
         droneRoundTripManagementTaskService.updateReturningDronesStatesUponArrival();
-
-        logger.info("******************* Drone Round Trip Management Cron Job *******************");
-        logger.info("******************************* End *******************************");
     }
 }
