@@ -29,7 +29,7 @@ public class DroneShipmentInitializationTaskService {
         drones.forEach(drone -> {
             droneDataManagementService.updateDroneState(drone, DroneState.DELIVERING);
             List<DronePayload> dronePayloads = dronePayloadDataManagementService.
-                    fetchDronePayload(drone, PayloadState.READY_FOR_DELIVERY);
+                    fetchDronePayload(drone, List.of(PayloadState.READY_FOR_DELIVERY));
             if(dronePayloads.size() == 1) {
                 dronePayloadDataManagementService.updateDronePayloadState(dronePayloads.get(0), PayloadState.IN_DELIVERY);
             }

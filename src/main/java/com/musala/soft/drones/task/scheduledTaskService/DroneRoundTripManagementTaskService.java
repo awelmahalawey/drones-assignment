@@ -31,7 +31,7 @@ public class DroneRoundTripManagementTaskService {
             if(now - drone.getLastShipmentStartedAt() >= (DroneConstants.SHIPMENT_ROUND_TRIP_DURATION / 2)) {
                 droneDataManagementService.updateDroneState(drone, DroneState.RETURNING);
                 List<DronePayload> dronePayloads = dronePayloadDataManagementService.
-                        fetchDronePayload(drone, PayloadState.IN_DELIVERY);
+                        fetchDronePayload(drone, List.of(PayloadState.IN_DELIVERY));
                 if(dronePayloads.size() == 1) {
                     dronePayloadDataManagementService.updateDronePayloadState(dronePayloads.get(0), PayloadState.DELIVERED);
                 }

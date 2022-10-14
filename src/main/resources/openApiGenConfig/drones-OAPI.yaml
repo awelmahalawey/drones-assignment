@@ -458,6 +458,91 @@ paths:
               schema:
                 $ref: '#/components/schemas/ApiErrorResource'
 
+  /drone/{droneId}/activePayload:
+    get:
+      tags:
+        - Drone Functionality
+      summary: Get Drone current active payload by Id Functionality.
+      description: Get Drone current active payload by Id.
+      operationId: getDroneActivePayload
+      parameters:
+        - name: droneId
+          in: path
+          description: Drone Id
+          required: true
+          allowEmptyValue: false
+          schema:
+            type: string
+      responses:
+        200:
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/DronePayloadResource'
+        400:
+          description: Request error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiErrorResource'
+        500:
+          description: Unexpected internal error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiErrorResource'
+        401:
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiErrorResource'
+
+  /drone/ShippingEligible:
+    get:
+      tags:
+        - Drone Functionality
+      summary: Fetch Drones eligible For Shipping Functionality.
+      description: Api to fetch all drones eleigible to make a shipment
+      operationId: fetchAllShipmentEligibleDrones
+      parameters:
+        - name: shipmentWeight
+          in: query
+          description: Required Shipment Weight
+          required: false
+          allowEmptyValue: true
+          schema:
+            type: number
+            format: double
+      responses:
+        200:
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/DroneResource'
+        400:
+          description: Request error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiErrorResource'
+        500:
+          description: Unexpected internal error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiErrorResource'
+        401:
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiErrorResource'
+
   /drone/shipment:
     post:
       tags:
@@ -614,14 +699,16 @@ components:
     DroneShipmentDataTransferResource:
       type: object
       properties:
-        payloadIdentifier:
-          type: string
-          description: Payload identifier
+        payloadItemsIdentifiers:
+          type: array
+          items:
+            type: string
+          description: Payload identifiers
         droneId:
           type: string
           description: Drone identifier that is holding the payload
       required:
-        - payloadIdentifier
+        - payloadItemsIdentifiers
 
     DroneShipmentResource:
       type: object
@@ -640,12 +727,11 @@ components:
     DronePayloadDataTransferResource:
       type: object
       properties:
-        payloadType:
-          type: string
-          $ref: '#/components/schemas/PayloadTypeEnum'
-        payloadIdentifier:
-          type: string
-          description: Payload identifier
+        payloadItems:
+          type: array
+          items:
+            $ref: '#/components/schemas/DronePayloadItemDataTransferResource'
+          description: Payload items
         state:
           type: string
           $ref: '#/components/schemas/PayloadStateEnum'
@@ -653,9 +739,21 @@ components:
           type: string
           description: Drone identifier that is holding the payload
       required:
+        - state
+        - payloadItems
+
+    DronePayloadItemDataTransferResource:
+      type: object
+      properties:
+        payloadType:
+          type: string
+          $ref: '#/components/schemas/PayloadTypeEnum'
+        payloadIdentifier:
+          type: string
+          description: Payload identifier
+      required:
         - payloadType
         - payloadIdentifier
-        - state
 
     BasePayloadResource:
       type: object
@@ -672,6 +770,21 @@ components:
         id:
           type: string
           description: payload ID
+        payloadItems:
+          type: array
+          items:
+            $ref: '#/components/schemas/DronePayloadItemResource'
+          description: Payload items
+        state:
+          type: string
+          $ref: '#/components/schemas/PayloadStateEnum'
+
+    DronePayloadItemResource:
+      type: object
+      properties:
+        id:
+          type: string
+          description: payload ID
         payloadType:
           type: string
           $ref: '#/components/schemas/PayloadTypeEnum'
@@ -682,13 +795,6 @@ components:
           type: object
           $ref: '#/components/schemas/BasePayloadResource'
           description: Payload details
-        state:
-          type: string
-          $ref: '#/components/schemas/PayloadStateEnum'
-      required:
-        - payloadType
-        - payloadIdentifier
-        - state
 
     BaseInfoResource:
       type: object

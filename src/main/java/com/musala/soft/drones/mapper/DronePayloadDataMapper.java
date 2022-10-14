@@ -1,11 +1,9 @@
 package com.musala.soft.drones.mapper;
 
-import com.musala.soft.drones.dataService.DronePayloadDataManagementService;
 import com.musala.soft.drones.dataService.MedicationDataManagementService;
-import com.musala.soft.drones.entity.Drone;
 import com.musala.soft.drones.entity.DronePayload;
+import com.musala.soft.drones.entity.DronePayloadItem;
 import com.musala.soft.drones.entity.Medication;
-import com.musala.soft.drones.enumerator.PayloadState;
 import com.musala.soft.drones.exception.DataValidationException;
 import com.musala.soft.drones.exception.MedicationDataManagementException;
 import com.musala.soft.drones.model.*;
@@ -13,8 +11,10 @@ import org.modelmapper.ModelMapper;
 import org.modelmapper.convention.MatchingStrategies;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.util.CollectionUtils;
 
 import javax.servlet.http.HttpServletRequest;
+import java.util.stream.Collectors;
 
 @Service
 public class DronePayloadDataMapper {
@@ -42,17 +42,30 @@ public class DronePayloadDataMapper {
         }
         DronePayloadResource dronePayloadResource = this.modelMapper.map(dronePayload,
                 DronePayloadResource.class);
-        dronePayloadResource.setPayloadType(PayloadTypeEnum.valueOf(dronePayload.getType().name()));
         dronePayloadResource.setState(PayloadStateEnum.valueOf(dronePayload.getState().name()));
-        switch (dronePayload.getType()) {
+        if(!CollectionUtils.isEmpty(dronePayload.getDronePayloadItems())) {
+            dronePayloadResource.setPayloadItems(dronePayload.getDronePayloadItems().stream().map(this::map).
+                    collect(Collectors.toList()));
+        }
+        return dronePayloadResource;
+    }
+
+    public DronePayloadItemResource map(DronePayloadItem dronePayloadItem) {
+        if(dronePayloadItem == null) {
+            return null;
+        }
+        DronePayloadItemResource dronePayloadItemResource = this.modelMapper.map(dronePayloadItem,
+                DronePayloadItemResource.class);
+        dronePayloadItemResource.setPayloadType(PayloadTypeEnum.valueOf(dronePayloadItem.getType().name()));
+        switch (dronePayloadItem.getType()) {
             case MEDICATION:
                 Medication medication = medicationDataManagementService.
-                        getMedication(dronePayload.getPayloadIdentifier());
-                dronePayloadResource.setPayloadDetails(medicationDataMapper.map(medication));
+                        getMedication(dronePayloadItem.getPayloadIdentifier());
+                dronePayloadItemResource.setPayloadDetails(medicationDataMapper.map(medication));
                 break;
             default:
                 break;
         }
-        return dronePayloadResource;
+        return dronePayloadItemResource;
     }
 }

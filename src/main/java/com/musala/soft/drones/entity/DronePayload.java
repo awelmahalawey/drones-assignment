@@ -7,6 +7,7 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import javax.persistence.*;
+import java.util.List;
 
 @Entity
 @Getter
@@ -19,14 +20,10 @@ public class DronePayload extends BaseEntityUUID {
     @JoinColumn(name = "drone_id")
     private Drone drone;
 
-    @Column(name = "payload_type", length = 255, nullable = false)
-    @Enumerated(EnumType.STRING)
-    private PayloadType type;
-
-    @Column(name = "payload_identifier", length = 255, nullable = false)
-    private String payloadIdentifier;
-
     @Column(name = "state", length = 255, nullable = false)
     @Enumerated(EnumType.STRING)
     private PayloadState state;
+
+    @OneToMany(mappedBy = "dronePayload", fetch = FetchType.LAZY)
+    private List<DronePayloadItem> dronePayloadItems;
 }

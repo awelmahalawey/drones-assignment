@@ -23,12 +23,12 @@ public interface DronePayloadRepository extends JpaRepository<DronePayload, UUID
             "       dp.drone = :drone " +
             "       AND ( " +
             "               (:searchByPayloadState = false) " +
-            "               OR (dp.state = :payloadState) " +
+            "               OR (dp.state IN :payloadStates) " +
             "           )" +
             "       AND dp.isActive = true " +
             "   )")
     List<DronePayload> findAllWithFilter(
             @Param("drone") Drone drone,
             @Param("searchByPayloadState") Boolean searchByPayloadState,
-            @Param("payloadState") PayloadState payloadState);
+            @Param("payloadStates") List<PayloadState> payloadStates);
 }

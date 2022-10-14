@@ -45,6 +45,18 @@ public class DroneApiRouter implements DroneApi {
     }
 
     @Override
+    public ResponseEntity<List<DroneResource>> fetchAllShipmentEligibleDrones(Double shipmentWeight) {
+        List<DroneResource> droneResources =
+                droneController.fetchAllEligibleDrones(shipmentWeight);
+        return ResponseEntity.ok()
+                .header(WebConstants.HEADER_KEY_PAGINATION_TOTAL_COUNT,
+                        String.valueOf(droneResources.size()))
+                .header(WebConstants.HEADER_KEY_PAGINATION_CURRENT_PAGE, String.valueOf(0))
+                .header(WebConstants.HEADER_KEY_PAGINATION_HAS_MORE, String.valueOf(false))
+                .body(droneResources);
+    }
+
+    @Override
     public ResponseEntity<DroneDetailedResource> getDroneDetails(String droneId) {
         DroneDetailedResource droneDetailedResource = droneController.getDroneDetails(droneId);
         return ResponseEntity.ok(droneDetailedResource);
@@ -61,5 +73,11 @@ public class DroneApiRouter implements DroneApi {
             DroneShipmentDataTransferResource droneShipmentDataTransferResource) {
         DroneShipmentResource droneShipmentResource = droneController.loadShipmentToDrone(droneShipmentDataTransferResource);
         return ResponseEntity.ok(droneShipmentResource);
+    }
+
+    @Override
+    public ResponseEntity<DronePayloadResource> getDroneActivePayload(String droneId) {
+        DronePayloadResource dronePayloadResource = droneController.getDroneActivePayload(droneId);
+        return ResponseEntity.ok(dronePayloadResource);
     }
 }

@@ -3,6 +3,7 @@ package com.musala.soft.drones.dataService;
 import com.musala.soft.drones.constant.MessageConstants;
 import com.musala.soft.drones.entity.Drone;
 import com.musala.soft.drones.entity.DronePayload;
+import com.musala.soft.drones.entity.DronePayloadItem;
 import com.musala.soft.drones.entity.Medication;
 import com.musala.soft.drones.enumerator.PayloadState;
 import com.musala.soft.drones.enumerator.PayloadType;
@@ -11,13 +12,17 @@ import com.musala.soft.drones.exception.DronePayloadDataManagementException;
 import com.musala.soft.drones.exception.MedicationDataManagementException;
 import com.musala.soft.drones.exception.RequiredDataValidationException;
 import com.musala.soft.drones.model.DronePayloadDataTransferResource;
+import com.musala.soft.drones.model.DronePayloadItemDataTransferResource;
+import com.musala.soft.drones.repository.DronePayloadItemRepository;
 import com.musala.soft.drones.repository.DronePayloadRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.util.CollectionUtils;
 import org.springframework.util.StringUtils;
 import utils.ValidationUtil;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
@@ -26,6 +31,9 @@ public class DronePayloadDataManagementService {
 
     @Autowired
     private DronePayloadRepository dronePayloadRepository;
+
+    @Autowired
+    private DronePayloadItemRepository dronePayloadItemRepository;
 
     @Autowired
     private MedicationDataManagementService medicationDataManagementService;
@@ -41,7 +49,7 @@ public class DronePayloadDataManagementService {
         if (drone == null) {
             throw new RequiredDataValidationException(MessageConstants.MISSING_DRONE_FOR_PAYLOAD);
         }
-        validatePayloadIdentifier(dronePayloadDataTransferResource);
+        validatePayloadItems(dronePayloadDataTransferResource.getPayloadItems());
         DronePayload dronePayload = new DronePayload();
         return setDataAndSave(dronePayload, drone, dronePayloadDataTransferResource);
     }
@@ -57,7 +65,7 @@ public class DronePayloadDataManagementService {
         if (drone == null) {
             throw new RequiredDataValidationException(MessageConstants.MISSING_DRONE_FOR_PAYLOAD);
         }
-        validatePayloadIdentifier(dronePayloadDataTransferResource);
+        validatePayloadItems(dronePayloadDataTransferResource.getPayloadItems());
         return setDataAndSave(dronePayload, drone, dronePayloadDataTransferResource);
     }
 
@@ -98,25 +106,31 @@ public class DronePayloadDataManagementService {
         return dronePayload;
     }
 
-    public List<DronePayload> fetchDronePayload(Drone drone, PayloadState payloadState) {
-        return dronePayloadRepository.findAllWithFilter(drone, payloadState != null,
-                payloadState);
+    public List<DronePayload> fetchDronePayload(Drone drone, List<PayloadState> payloadStates) {
+        return dronePayloadRepository.findAllWithFilter(drone, !CollectionUtils.isEmpty(payloadStates),
+                payloadStates);
     }
 
-    private void validatePayloadIdentifier(DronePayloadDataTransferResource
-                                                   dronePayloadDataTransferResource)
-            throws DataValidationException, MedicationDataManagementException, DronePayloadDataManagementException {
-
-        switch (dronePayloadDataTransferResource.getPayloadType()) {
-            case MEDICATION:
-                Medication medicationPackage = medicationDataManagementService.getMedication
-                        (dronePayloadDataTransferResource.getPayloadIdentifier());
-                if (medicationPackage == null) {
-                    throw new DronePayloadDataManagementException(MessageConstants.INVALID_PAYLOAD_IDENTIFIER);
-                }
-                break;
-            default:
-                throw new DronePayloadDataManagementException(MessageConstants.INVALID_PAYLOAD_TYPE);
+    private void validatePayloadItems(List<DronePayloadItemDataTransferResource> dronePayloadItemDataTransferResources)
+            throws DataValidationException, MedicationDataManagementException,
+            DronePayloadDataManagementException {
+        if (CollectionUtils.isEmpty(dronePayloadItemDataTransferResources)) {
+            throw new DronePayloadDataManagementException(MessageConstants.MISSING_PAYLOAD_ITEMS);
+        }
+        for (DronePayloadItemDataTransferResource dronePayloadItemDataTransferResource :
+                dronePayloadItemDataTransferResources) {
+            switch (dronePayloadItemDataTransferResource.getPayloadType()) {
+                case MEDICATION:
+                    Medication medicationPackage = medicationDataManagementService.getMedication
+                            (dronePayloadItemDataTransferResource.getPayloadIdentifier());
+                    if (medicationPackage == null) {
+                        throw new DronePayloadDataManagementException(
+                                MessageConstants.INVALID_PAYLOAD_IDENTIFIER);
+                    }
+                    break;
+                default:
+                    throw new DronePayloadDataManagementException(MessageConstants.INVALID_PAYLOAD_TYPE);
+            }
         }
     }
 
@@ -127,9 +141,19 @@ public class DronePayloadDataManagementService {
     ) {
         dronePayload.setState(PayloadState.valueOf(dronePayloadDataTransferResource.getState().getValue()));
         dronePayload.setDrone(drone);
-        dronePayload.setType(PayloadType.valueOf(dronePayloadDataTransferResource.getPayloadType().getValue()));
-        dronePayload.setPayloadIdentifier(dronePayloadDataTransferResource.getPayloadIdentifier());
         dronePayload.setIsActive(true);
-        return dronePayloadRepository.save(dronePayload);
+        dronePayload = dronePayloadRepository.save(dronePayload);
+        List<DronePayloadItem> dronePayloadItems = new ArrayList<>();
+        for(DronePayloadItemDataTransferResource dronePayloadItemDataTransferResource :
+                dronePayloadDataTransferResource.getPayloadItems()) {
+            DronePayloadItem dronePayloadItem = new DronePayloadItem();
+            dronePayloadItem.setDronePayload(dronePayload);
+            dronePayloadItem.setType(PayloadType.valueOf(dronePayloadItemDataTransferResource.getPayloadType().getValue()));
+            dronePayloadItem.setPayloadIdentifier(dronePayloadItemDataTransferResource.getPayloadIdentifier());
+            dronePayloadItem.setIsActive(true);
+            dronePayloadItems.add(dronePayloadItemRepository.save(dronePayloadItem));
+        }
+        dronePayload.setDronePayloadItems(dronePayloadItems);
+        return dronePayload;
     }
 }

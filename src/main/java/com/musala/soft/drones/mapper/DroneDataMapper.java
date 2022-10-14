@@ -50,7 +50,7 @@ public class DroneDataMapper {
                 drone.getState().equals(DroneState.DELIVERING) ||
                 drone.getState().equals(DroneState.DELIVERED)) {
             List<DronePayload> dronePayloads = dronePayloadDataManagementService.
-                    fetchDronePayload(drone, PayloadState.IN_DELIVERY);
+                    fetchDronePayload(drone, List.of(PayloadState.IN_DELIVERY));
             if(dronePayloads.size() > 0) {
                 droneResource.setPayload(dronePayloadDataMapper.
                         map(dronePayloads.stream().findFirst().get()));
