@@ -99,7 +99,8 @@ public class DronePayloadDataManagementService {
     }
 
     public List<DronePayload> fetchDronePayload(Drone drone, PayloadState payloadState) {
-        return dronePayloadRepository.findAllWithFilter(drone, payloadState != null, payloadState);
+        return dronePayloadRepository.findAllWithFilter(drone, payloadState != null,
+                payloadState);
     }
 
     private void validatePayloadIdentifier(DronePayloadDataTransferResource

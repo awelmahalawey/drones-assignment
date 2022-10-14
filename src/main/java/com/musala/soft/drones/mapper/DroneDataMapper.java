@@ -46,7 +46,8 @@ public class DroneDataMapper {
         DroneResource droneResource = this.modelMapper.map(drone, DroneResource.class);
         droneResource.setModel(DroneModelEnum.valueOf(drone.getModel().name()));
         droneResource.setState(DroneStateEnum.valueOf(drone.getState().name()));
-        if(drone.getState().equals(DroneState.LOADED) || drone.getState().equals(DroneState.LOADING) || drone.getState().equals(DroneState.DELIVERING) ||
+        if(drone.getState().equals(DroneState.LOADED) || drone.getState().equals(DroneState.LOADING) ||
+                drone.getState().equals(DroneState.DELIVERING) ||
                 drone.getState().equals(DroneState.DELIVERED)) {
             List<DronePayload> dronePayloads = dronePayloadDataManagementService.
                     fetchDronePayload(drone, PayloadState.IN_DELIVERY);
