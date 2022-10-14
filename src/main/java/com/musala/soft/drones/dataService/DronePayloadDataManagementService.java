@@ -62,6 +62,18 @@ public class DronePayloadDataManagementService {
     }
 
     @Transactional
+    public DronePayload updateDronePayloadState(DronePayload dronePayload, PayloadState payloadState)
+            throws RequiredDataValidationException, DataValidationException, MedicationDataManagementException,
+            DronePayloadDataManagementException {
+
+        if (dronePayload == null) {
+            throw new DronePayloadDataManagementException(MessageConstants.DRONE_PAYLOAD_NOT_FOUND);
+        }
+        dronePayload.setState(payloadState);
+        return dronePayloadRepository.save(dronePayload);
+    }
+
+    @Transactional
     public void deleteDronePayload(DronePayload dronePayload)
             throws DronePayloadDataManagementException {
 

@@ -9,5 +9,6 @@ CREATE TABLE IF NOT EXISTS drone (
    state VARCHAR(255) NOT NULL,
    weight_limit DOUBLE NOT NULL,
    battery_cap DOUBLE NOT NULL,
+   last_shipment_started_at BIGINT,
    CONSTRAINT pk_drone PRIMARY KEY (id)
 );

@@ -59,6 +59,30 @@ public class DroneDataManagementService {
     }
 
     @Transactional
+    public Drone updateDroneState(Drone drone,
+                                  DroneState droneState)
+            throws RequiredDataValidationException, DroneDataManagementException {
+
+        if (drone == null) {
+            throw new DroneDataManagementException(MessageConstants.DRONE_NOT_FOUND);
+        }
+        drone.setState(droneState);
+        return droneRepository.save(drone);
+    }
+
+    @Transactional
+    public Drone updateBatteryCap(Drone drone,
+                                  Double batteryCap)
+            throws RequiredDataValidationException, DroneDataManagementException {
+
+        if (drone == null) {
+            throw new DroneDataManagementException(MessageConstants.DRONE_NOT_FOUND);
+        }
+        drone.setBatteryCap(batteryCap);
+        return droneRepository.save(drone);
+    }
+
+    @Transactional
     public void deleteDrone(Drone drone)
             throws DroneDataManagementException {
 

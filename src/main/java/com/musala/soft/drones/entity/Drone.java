@@ -33,6 +33,9 @@ public class Drone extends BaseEntityUUID {
     @Column(name = "battery_cap", nullable = false)
     private Double batteryCap;
 
+    @Column(name = "last_shipment_started_at")
+    private Long lastShipmentStartedAt;
+
     @OneToMany(mappedBy = "drone", fetch = FetchType.LAZY)
     private List<DronePayload> dronePayloads;
 }
