@@ -28,7 +28,7 @@ public class Drone extends BaseEntityUUID {
     private DroneState state;
 
     @Column(name = "weight_limit", nullable = false)
-    private Integer weightLimit;
+    private Double weightLimit;
 
     @Column(name = "battery_cap", nullable = false)
     private Double batteryCap;

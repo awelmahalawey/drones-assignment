@@ -22,4 +22,9 @@ public class MessageConstants {
     public static final String INVALID_DRONE_BATTERY_CAP = "invalidDroneBatteryCap";
     public static final String DRONE_NOT_FOUND = "droneNotFound";
     public static final String INVALID_DRONE_ID = "invalidDroneId";
+
+    public static final String DRONE_STATE_INCAPABLE_FOR_SHIPMENT = "droneStateIncapableForShipment";
+    public static final String DRONE_BATTERY_CAP_INCAPABLE_FOR_SHIPMENT = "droneBatteryCapIncapableForShipment";
+    public static final String DRONE_WEIGHT_LIMIT_INCAPABLE_FOR_SHIPMENT = "droneWeightLimitIncapableForShipment";
+    public static final String NO_AVAILABLE_DRONES_FOR_SHIPMENT = "noAvailableDronesForShipment";
 }

@@ -1,12 +1,8 @@
 package com.musala.soft.drones.repository;
 
 import com.musala.soft.drones.entity.Drone;
-import com.musala.soft.drones.entity.Medication;
 import com.musala.soft.drones.enumerator.DroneModel;
 import com.musala.soft.drones.enumerator.DroneState;
-import com.musala.soft.drones.enumerator.PayloadState;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
@@ -45,4 +41,18 @@ public interface DroneRepository extends JpaRepository<Drone, UUID> {
             @Param("droneState") DroneState droneState,
             @Param("searchByDroneModel") Boolean searchByDroneModel,
             @Param("droneModel") DroneModel droneModel);
+
+    @Query(value = "SELECT DISTINCT d " +
+            "FROM Drone d " +
+            "WHERE " +
+            "   ( " +
+            "       d.state = :state" +
+            "       AND d.batteryCap >= :batteryCap" +
+            "       AND d.weightLimit >= :payloadWeight" +
+            "       AND d.isActive = true " +
+            "   ) " +
+            "ORDER BY d.batteryCap DESC")
+    List<Drone> findDronesByStateAndBatteryCapMoreThanAndWeightLimitMoreThan(
+            @Param("state") DroneState droneState,
+            @Param("batteryCap") Double batteryCap, @Param("payloadWeight") Double payloadWeight);
 }

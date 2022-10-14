@@ -89,6 +89,18 @@ public class DroneDataManagementService {
                 droneState != null, droneState, droneModel != null, droneModel);
     }
 
+    public Drone findFirstDroneByStateAndBatteryCapMoreThanAndWeightLimitMoreThan(DroneState droneState, Double batteryCap,
+                                                               Double payloadWeight) {
+
+        List<Drone> drones = droneRepository.findDronesByStateAndBatteryCapMoreThanAndWeightLimitMoreThan(
+                droneState, batteryCap, payloadWeight);
+
+        if(drones.size() > 0) {
+            return drones.get(0);
+        }
+        return null;
+    }
+
     private void validateDroneDataConstraints (DroneDataTransferResource droneDataTransferResource)
             throws DroneDataManagementException {
         if(droneDataTransferResource.getSerialNumber().length() > 100) {

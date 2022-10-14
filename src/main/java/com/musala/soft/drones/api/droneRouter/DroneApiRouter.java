@@ -55,4 +55,11 @@ public class DroneApiRouter implements DroneApi {
         BaseInfoResource baseInfoResource = droneController.deleteDrone(droneId);
         return ResponseEntity.ok(baseInfoResource);
     }
+
+    @Override
+    public ResponseEntity<DroneShipmentResource> loadShipmentToDrone(
+            DroneShipmentDataTransferResource droneShipmentDataTransferResource) {
+        DroneShipmentResource droneShipmentResource = droneController.loadShipmentToDrone(droneShipmentDataTransferResource);
+        return ResponseEntity.ok(droneShipmentResource);
+    }
 }

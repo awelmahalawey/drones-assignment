@@ -7,7 +7,7 @@ CREATE TABLE IF NOT EXISTS drone (
    serial_number VARCHAR(100) NOT NULL,
    model VARCHAR(255) NOT NULL,
    state VARCHAR(255) NOT NULL,
-   weight_limit INT NOT NULL,
+   weight_limit DOUBLE NOT NULL,
    battery_cap DOUBLE NOT NULL,
    CONSTRAINT pk_drone PRIMARY KEY (id)
 );

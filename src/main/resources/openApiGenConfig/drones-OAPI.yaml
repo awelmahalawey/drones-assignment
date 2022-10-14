@@ -458,6 +458,44 @@ paths:
               schema:
                 $ref: '#/components/schemas/ApiErrorResource'
 
+  /drone/shipment:
+    post:
+      tags:
+        - Drone Functionality
+      summary: Load a drone with new shipment Functionality.
+      description: Load a drone with new shipment.
+      operationId: loadShipmentToDrone
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/DroneShipmentDataTransferResource'
+      responses:
+        200:
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/DroneShipmentResource'
+        400:
+          description: Request error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiErrorResource'
+        500:
+          description: Unexpected internal error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiErrorResource'
+        401:
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiErrorResource'
+
 components:
   schemas:
     MedicationDataTransferResource:
@@ -516,7 +554,8 @@ components:
           type: string
           $ref: '#/components/schemas/DroneStateEnum'
         weightLimit:
-          type: integer
+          type: number
+          format: double
           description: Drone weight Limit weight
         batteryCap:
           type: number
@@ -545,7 +584,8 @@ components:
           type: string
           $ref: '#/components/schemas/DroneStateEnum'
         weightLimit:
-          type: integer
+          type: number
+          format: double
           description: Drone weight Limit weight
         batteryCap:
           type: number
@@ -566,6 +606,32 @@ components:
               items:
                 $ref: '#/components/schemas/DronePayloadResource'
               description: Drone previus payloads
+
+    DroneShipmentDataTransferResource:
+      type: object
+      properties:
+        payloadIdentifier:
+          type: string
+          description: Payload identifier
+        droneId:
+          type: string
+          description: Drone identifier that is holding the payload
+      required:
+        - payloadIdentifier
+
+    DroneShipmentResource:
+      type: object
+      properties:
+        drone:
+          type: object
+          $ref: '#/components/schemas/DroneResource'
+          description: Drone used for the shipment
+        payload:
+          type: object
+          $ref: '#/components/schemas/DronePayloadResource'
+          description: Payload of the shipment
+      required:
+        - payloadIdentifier
 
     DronePayloadDataTransferResource:
       type: object
@@ -599,6 +665,9 @@ components:
     DronePayloadResource:
       type: object
       properties:
+        id:
+          type: string
+          description: payload ID
         payloadType:
           type: string
           $ref: '#/components/schemas/PayloadTypeEnum'
