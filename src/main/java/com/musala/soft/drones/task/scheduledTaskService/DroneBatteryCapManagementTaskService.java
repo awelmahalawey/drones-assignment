@@ -27,7 +27,7 @@ public class DroneBatteryCapManagementTaskService {
         drones.forEach(drone -> {
             if(drone.getBatteryCap() < 100) {
                 droneDataManagementService.updateBatteryCap(drone,
-                        drone.getBatteryCap() + DroneConstants.IDLE_DRONE_CHARGING_RATE_PER_SECOND);
+                        Math.min(100, drone.getBatteryCap() + DroneConstants.IDLE_DRONE_CHARGING_RATE_PER_SECOND));
             }
         });
     }

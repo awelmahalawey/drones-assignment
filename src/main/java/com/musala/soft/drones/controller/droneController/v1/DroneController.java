@@ -63,7 +63,7 @@ public class DroneController extends BaseController {
     public DroneResource updateDrone(String droneId,
                                      DroneDataTransferResource droneDataTransferResource) {
         try {
-            Drone drone = droneDataManagementService.getDrone(droneId);
+            Drone drone = droneDataManagementService.getDroneWithLock(droneId);
 
             drone = droneDataManagementService.updateDrone(drone, droneDataTransferResource);
 
@@ -174,7 +174,7 @@ public class DroneController extends BaseController {
 
             Drone drone;
             if(StringUtils.hasLength(droneShipmentDataTransferResource.getDroneId())) {
-                drone = droneDataManagementService.getDrone(droneShipmentDataTransferResource.getDroneId());
+                drone = droneDataManagementService.getDroneWithLock(droneShipmentDataTransferResource.getDroneId());
                 if(!drone.getState().equals(DroneState.IDLE)) {
                     throw apiResponseErrorException(
                             new DroneDataManagementException(MessageConstants.DRONE_STATE_INCAPABLE_FOR_SHIPMENT));
@@ -200,7 +200,15 @@ public class DroneController extends BaseController {
                             new DroneDataManagementException(
                                     MessageConstants.NO_AVAILABLE_DRONES_FOR_SHIPMENT));
                 }
+
+                drone = droneDataManagementService.getDroneWithLock(drone.getId().toString());
             }
+
+            DroneDataTransferResource droneDataTransferResource = droneDataMapper.mapDroneDataTransferResource(drone);
+            droneDataTransferResource.setState(DroneStateEnum.LOADED);
+            droneDataTransferResource.setLastShipmentStartedAt(new Date().getTime());
+            drone = droneDataManagementService.updateDrone(drone, droneDataTransferResource);
+
             DronePayloadDataTransferResource dronePayloadDataTransferResource = new DronePayloadDataTransferResource();
             dronePayloadDataTransferResource.setState(PayloadStateEnum.READY_FOR_DELIVERY);
             List<DronePayloadItemDataTransferResource> dronePayloadItemDataTransferResources = payloadItems.stream().map(payload -> {
@@ -211,11 +219,6 @@ public class DroneController extends BaseController {
             }).collect(Collectors.toList());
             dronePayloadDataTransferResource.setPayloadItems(dronePayloadItemDataTransferResources);
             DronePayload dronePayload = dronePayloadDataManagementService.addDronePayload(drone, dronePayloadDataTransferResource);
-
-            DroneDataTransferResource droneDataTransferResource = droneDataMapper.mapDroneDataTransferResource(drone);
-            droneDataTransferResource.setState(DroneStateEnum.LOADED);
-            droneDataTransferResource.setLastShipmentStartedAt(new Date().getTime());
-            drone = droneDataManagementService.updateDrone(drone, droneDataTransferResource);
 
             DroneShipmentResource droneShipmentResource = new DroneShipmentResource();
             droneShipmentResource.setDrone(droneDataMapper.map(drone));

@@ -107,6 +107,20 @@ public class DroneDataManagementService {
         return drone;
     }
 
+    public Drone getDroneWithLock(String droneId)
+            throws DataValidationException, DroneDataManagementException {
+
+        if (!StringUtils.hasLength(droneId)) {
+            throw new DataValidationException(MessageConstants.INVALID_DRONE_ID);
+        }
+
+        Drone drone = droneRepository.findByIdAndIsActiveWithLock(UUID.fromString(droneId), true);
+        if (drone == null) {
+            throw new DroneDataManagementException(MessageConstants.DRONE_NOT_FOUND);
+        }
+        return drone;
+    }
+
     public List<Drone> fetchDrones(String searchText, DroneState droneState, DroneModel droneModel) {
         return droneRepository.findAllWithFilters(
                 StringUtils.hasLength(searchText) ? searchText.toLowerCase() : "",

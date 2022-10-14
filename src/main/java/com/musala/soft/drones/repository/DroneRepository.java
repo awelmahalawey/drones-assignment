@@ -4,10 +4,12 @@ import com.musala.soft.drones.entity.Drone;
 import com.musala.soft.drones.enumerator.DroneModel;
 import com.musala.soft.drones.enumerator.DroneState;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Lock;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
+import javax.persistence.LockModeType;
 import java.util.List;
 import java.util.UUID;
 
@@ -17,6 +19,10 @@ public interface DroneRepository extends JpaRepository<Drone, UUID> {
     Drone findBySerialNumber(String serialNumber);
 
     Drone findByIdAndIsActive(UUID id, Boolean isActive);
+
+    @Lock(LockModeType.PESSIMISTIC_WRITE)
+    @Query(value = "select d from Drone d where d.id = :droneId and d.isActive = :isActive")
+    Drone findByIdAndIsActiveWithLock(@Param("droneId") UUID droneId, @Param("isActive") Boolean isActive);
 
     @Query(value = "SELECT DISTINCT d " +
             "FROM Drone d " +
