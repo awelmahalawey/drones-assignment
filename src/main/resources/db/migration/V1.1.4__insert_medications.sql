@@ -3,7 +3,7 @@ INTO
   medication
   (id, name, code, weight, version_no, created_at, updated_at, is_active, image_url)
 VALUES
-  (RANDOM_UUID(), 'BiAlcophan', 'BALC_204', 10, 0, NOW(), NOW(), TRUE, '');
+  ('55e74b88-4f97-4fc5-b0ef-f9cd7dc5ff4f', 'BiAlcophan', 'BALC_204', 10, 0, NOW(), NOW(), TRUE, '');
 
 INSERT
 INTO
