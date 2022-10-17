@@ -7,6 +7,9 @@ import com.musala.soft.drones.entity.Drone;
 import com.musala.soft.drones.entity.DronePayload;
 import com.musala.soft.drones.enumerator.DroneState;
 import com.musala.soft.drones.enumerator.PayloadState;
+import com.musala.soft.drones.task.scheduledTask.DroneRoundTripManagementTask;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -15,6 +18,8 @@ import java.util.List;
 
 @Service
 public class DroneRoundTripManagementTaskService {
+
+    private final Logger logger = LoggerFactory.getLogger(DroneRoundTripManagementTaskService.class);
 
     @Autowired
     private DroneDataManagementService droneDataManagementService;
@@ -37,6 +42,8 @@ public class DroneRoundTripManagementTaskService {
                 }
             }
             droneDataManagementService.updateBatteryCap(drone, drone.getBatteryCap() - 1);
+            logger.info("Drone (s/n): '" + drone.getSerialNumber() +
+                    "', not charging, batteryCap: " + (drone.getBatteryCap() - 1) + "%.");
         });
     }
 
@@ -50,6 +57,8 @@ public class DroneRoundTripManagementTaskService {
                 droneDataManagementService.updateDroneState(drone, DroneState.IDLE);
             }
             droneDataManagementService.updateBatteryCap(drone, drone.getBatteryCap() - 1);
+            logger.info("Drone (s/n): '" + drone.getSerialNumber() +
+                    "', not charging, batteryCap: " + (drone.getBatteryCap() - 1) + "%.");
         });
     }
 }

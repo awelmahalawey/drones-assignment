@@ -13,8 +13,6 @@ import java.util.Date;
 @Service
 public class DroneRoundTripManagementTask {
 
-    private final Logger logger = LoggerFactory.getLogger(DroneRoundTripManagementTask.class);
-
     @Autowired
     private DroneRoundTripManagementTaskService droneRoundTripManagementTaskService;
 
