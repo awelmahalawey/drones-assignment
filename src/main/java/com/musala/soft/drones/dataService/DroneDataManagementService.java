@@ -13,7 +13,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.StringUtils;
-import utils.ValidationUtil;
+import com.musala.soft.drones.utils.ValidationUtil;
 
 import java.util.List;
 import java.util.UUID;

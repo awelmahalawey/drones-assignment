@@ -1,4 +1,4 @@
-package utils;
+package com.musala.soft.drones.utils;
 
 import com.musala.soft.drones.exception.RequiredDataValidationException;
 

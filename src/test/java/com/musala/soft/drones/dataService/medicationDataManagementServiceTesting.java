@@ -25,6 +25,8 @@ public class medicationDataManagementServiceTesting {
     @Autowired
     private DroneDataMapper droneDataMapper;
 
+    private static String createdTestMedicationId;
+
     @Order(0)
     @Test
     public void checkMedicationSize() {
@@ -62,15 +64,16 @@ public class medicationDataManagementServiceTesting {
         medicationDataTransferResource.setCode("TST_66");
         medicationDataTransferResource.setWeight(343.0);
         medicationDataTransferResource.setImageUrl("Image.png");
-        medicationDataManagementService.addMedication(medicationDataTransferResource);
+        Medication medication = medicationDataManagementService.addMedication(medicationDataTransferResource);
         assertEquals(medicationDataManagementService.fetchMedications("", null).getTotalElements(),
                 8);
+        createdTestMedicationId = medication.getId().toString();
     }
 
     @Order(5)
     @Test
     public void checkMedicationUpdate_withSuccess() {
-        Medication medication = medicationDataManagementService.getMedication("55e74b88-4f97-4fc5-b0ef-f9cd7dc5ff4f");
+        Medication medication = medicationDataManagementService.getMedication(createdTestMedicationId);
         Double oldWeight = medication.getWeight();
         MedicationDataTransferResource medicationDataTransferResource = new MedicationDataTransferResource();
         medicationDataTransferResource.setName(medication.getName());
@@ -86,7 +89,7 @@ public class medicationDataManagementServiceTesting {
     @Order(6)
     public void checkDeleteMedicationById_withSuccess() {
 
-        Medication medication = medicationDataManagementService.getMedication("55e74b88-4f97-4fc5-b0ef-f9cd7dc5ff4f");
+        Medication medication = medicationDataManagementService.getMedication(createdTestMedicationId);
         assertNotNull(medication);
         medicationDataManagementService.deleteMedication(medication);
         assertEquals(medicationDataManagementService.fetchMedications("", null).getTotalElements(),

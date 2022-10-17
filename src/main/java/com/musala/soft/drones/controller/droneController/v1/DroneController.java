@@ -125,6 +125,7 @@ public class DroneController extends BaseController {
         }
     }
 
+    @Transactional
     public DroneDetailedResource getDroneDetails(String droneId) {
         try {
             Drone drone = droneDataManagementService.getDrone(droneId);

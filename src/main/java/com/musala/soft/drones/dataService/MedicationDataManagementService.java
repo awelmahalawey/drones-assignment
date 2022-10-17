@@ -13,7 +13,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.StringUtils;
-import utils.ValidationUtil;
+import com.musala.soft.drones.utils.ValidationUtil;
 
 import java.util.UUID;
 

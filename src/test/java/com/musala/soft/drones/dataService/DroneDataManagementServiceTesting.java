@@ -23,9 +23,13 @@ public class DroneDataManagementServiceTesting {
     @Autowired
     private DroneDataManagementService droneDataManagementService;
 
+    private static String createdTestDroneId = "";
+
     @Autowired
     private DroneDataMapper droneDataMapper;
 
+    @Order(0)
+    @Test
     public void checkDroneFleetSize() {
         List<Drone> droneList = droneDataManagementService.fetchDrones("", null, null);
         assertEquals(droneList.size(), 10);
@@ -50,31 +54,32 @@ public class DroneDataManagementServiceTesting {
         droneDataTransferResource.setBatteryCap(12.0);
         droneDataTransferResource.setWeightLimit(300.0);
         droneDataTransferResource.setSerialNumber(UUID.randomUUID().toString());
-        droneDataManagementService.addDrone(droneDataTransferResource);
+        Drone drone = droneDataManagementService.addDrone(droneDataTransferResource);
         assertEquals(droneDataManagementService.fetchDrones("", null, null).size(),
                 11);
+        createdTestDroneId = drone.getId().toString();
     }
 
     @Order(3)
     @Test
     public void checkDroneGetDetailsById_withFailure() {
         assertThrows(DroneDataManagementException.class,
-                () -> droneDataManagementService.getDrone("6b08d6a5-c0e9-4c4e-8b70-ee4a70e4d00c"));
+                () -> droneDataManagementService.getDrone(UUID.randomUUID().toString()));
     }
 
     @Order(4)
     @Test
     public void checkDroneGetDetailsById_withSuccess() {
-        Drone drone = droneDataManagementService.getDrone("113101e2-dfdb-4b63-b4ec-851ff54dbba6");
+        Drone drone = droneDataManagementService.getDrone(createdTestDroneId);
         assertNotNull(drone);
         assertEquals(drone.getId(),
-                UUID.fromString("113101e2-dfdb-4b63-b4ec-851ff54dbba6"));
+                UUID.fromString(createdTestDroneId));
     }
 
     @Order(5)
     @Test
     public void checkDroneUpdate_withSuccess() {
-        Drone drone = droneDataManagementService.getDrone("113101e2-dfdb-4b63-b4ec-851ff54dbba6");
+        Drone drone = droneDataManagementService.getDrone(createdTestDroneId);
         Double oldBatteryCap = drone.getBatteryCap();
         DroneDataTransferResource droneDataTransferResource = droneDataMapper.mapDroneDataTransferResource(drone);
         droneDataTransferResource.setBatteryCap(30.0);
@@ -86,7 +91,7 @@ public class DroneDataManagementServiceTesting {
     @Test
     @Order(6)
     public void checkDeleteDroneById_withSuccess() {
-        Drone drone = droneDataManagementService.getDrone("113101e2-dfdb-4b63-b4ec-851ff54dbba6");
+        Drone drone = droneDataManagementService.getDrone(createdTestDroneId);
         assertNotNull(drone);
         droneDataManagementService.deleteDrone(drone);
         assertEquals(droneDataManagementService.fetchDrones("", null, null).size(),
