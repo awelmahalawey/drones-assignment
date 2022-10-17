@@ -1,5 +1,7 @@
 # drones-assignment
 
+Branch called `main` contains the final code of the project.
+
 Project Specs:<br />
 - Java 11
 - Gradle based project
